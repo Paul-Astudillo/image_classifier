@@ -203,6 +203,22 @@ def recepcion():
     return  jsonify({'mensaje': 'imagen recibida'})
 
 
+@app.route('/recepciontxt', methods=['GET','POST'])
+def recepcion_txt():
+    global flag_imagen_recibida
+
+    if request.content_type == 'text/plain':
+        text_data = request.get_data()
+        
+        text_path = 'static/Images/puntos.txt'
+        with Image.open(BytesIO(text_data)) as txt:
+            txt.save(text_path)
+        flag_imagen_recibida = True
+        print("datos recibidos")
+    # solo para retornar algo
+    return  jsonify({'mensaje': 'datos recibidos'})
+
+
 
 @app.route('/static/<path:filename>')
 def static_files(filename):

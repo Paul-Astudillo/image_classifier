@@ -1,6 +1,7 @@
 venv/
 .idea/
 static/Images/imagen_recibida.png
+static/Images/puntos.txt
 *.pem
 pruebas.py
 *.mov
