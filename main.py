@@ -206,17 +206,18 @@ def recepcion():
 @app.route('/recepciontxt', methods=['GET','POST'])
 def recepcion_txt():
     global flag_imagen_recibida
-
-    if request.content_type == 'text/plain':
-        text_data = request.get_data()
+    # Guarda el archivo .txt
+    text_path = 'static/Images/datos.txt'
+    # Guarda el contenido en un archivo
+    text_data = request.get_data(as_text=True)
+    with open(text_path, 'w') as text_file:
+        text_file.write(text_data)
         
-        text_path = 'static/Images/puntos.txt'
-        with Image.open(BytesIO(text_data)) as txt:
-            txt.save(text_path)
-        flag_imagen_recibida = True
-        print("datos recibidos")
-    # solo para retornar algo
-    return  jsonify({'mensaje': 'datos recibidos'})
+    print("Archivo .txt recibido")
+
+    return jsonify({'mensaje': 'archivo .txt recibido'})
+    
+    
 
 
 
