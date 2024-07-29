@@ -5,7 +5,7 @@ import os
 import cv2 as cv
 import numpy as np
 # import desde efectos.py
-from efectos import removeBackgroud, bordesColor
+#from efectos import removeBackgroud, bordesColor
 
 app = Flask(__name__)
 
@@ -35,54 +35,7 @@ def aplicar_filtro():
     ancho_img = imagen_android.shape[1]
     alto_img = imagen_android.shape[0]
     
-    video_local = cv.VideoCapture("video.mov")
-
-    if video_local.isOpened():
-
-        video_externo = cv.VideoCapture("http://"+video_src_2+"/video")
-
-        if video_externo.isOpened():
-            print("abrio video ", video_src_2)
-        else:
-            print("NO se abrio el video ", video_src_2)
-
-        while True:
-            
-            _, frame = video_local.read()
-
-            _, frame2 = video_externo.read()
-
-            frame_sin_fondo = removeBackgroud(frame2)
-
-            frame_bordes = bordesColor(frame_sin_fondo)
-
-            resultado_final = cv.addWeighted(frame_sin_fondo, 1, frame_bordes, 1, 0)
-
-            # la imagen recibida desde android no tiene fondo por lo que los piexles vacios se ven en color 
-            # negro por lo que quitamos los pixeles negros (0,0,0)
-
-            # usamos la mascara para copiar solo los pixeles no negros
-            mask = np.any(imagen_android != [0, 0, 0], axis=-1)
-        
-            # convertimos la mascara a color 
-            mask_rgb = np.stack([mask, mask, mask], axis=-1)
-        
-            # copiamos todos los pixeles no negros(vacios) al video
-            frame[y_img_o:y_img_o + alto_img, x_img_o:x_img_o + ancho_img][mask_rgb] = imagen_android[mask_rgb]
-            
-            # se hace el mismo proceso para el video externo, solo que ahora se quita los pixels en blanco
-            mask2 = np.any(resultado_final != [255,255,255], axis=-1)
-            mask_rgb2 = np.stack([mask2,mask2,mask2], axis=-1)
-
-
-            frame[y_vid_o:y_vid_o+frame2.shape[0], x_vid_o:x_vid_o+frame2.shape[1]][mask_rgb2] = resultado_final[mask_rgb2]
-
-            cv.imshow("final", frame)
-
-            if cv.waitKey(1) == ord('q'):
-                break
-
-    
+ 
     
     
     return jsonify({'status': 'Filtro aplicado'})

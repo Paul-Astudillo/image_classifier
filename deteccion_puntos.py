@@ -1,11 +1,10 @@
 import numpy as np
 
-
+# esta es la funcion que se usa en el main.py
 def get_puntos_rostro():
     # obtiene los puntos del archivo datos.txt enviado desde android y los guarda en una lista
     lista_detecciones = leer_puntos()
    
-
     # separa los tipos de detecciones 
     
     face_detections = [det for det in lista_detecciones if det[0] == 'Face']
@@ -25,14 +24,16 @@ def get_puntos_rostro():
     best_nose = filtered_noses
     best_mouths = filtered_mouths
 
+    puntos_rostro = [best_face, best_eyes, best_nose, best_mouths]
+
     # Display the results
-    print("Best Face:", best_face[0])
-    print("Best Eyes:", best_eyes[0])
-    print("Best Nose:", best_nose[0])
-    print("Best Mouths:", best_mouths[0])
+    # print("Best Face:", best_face[0])
+    # print("Best Eyes:", best_eyes[0])
+    # print("Best Nose:", best_nose[0])
+    # print("Best Mouths:", best_mouths[0])
 
+    return puntos_rostro
 
-   
 
 def leer_puntos():
     with open('./static/Images/datos.txt', 'r') as file:
