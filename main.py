@@ -9,7 +9,7 @@ from efectos import removeBackgroud, bordesColor
 
 app = Flask(__name__)
 
-flag_imagen_recibida = False
+flag_imagen_recibida = True
 
 # origenes para fusionar la imagen
 # el video tiene una resolcion de 1920x1080
@@ -20,88 +20,6 @@ y_img_o = 500
 x_vid_o = 100
 y_vid_o = 400
 
-video_src = "video.mov"
-
-# direccion de la webcam
-video_src_2 = "172.16.213.103:4747"
-
-# obtienne la ip de la webcam al presionar el boton "obtener video"
-@app.route('/set_video_source', methods=['POST'])
-def set_video_source():
-    global video_src_2
-    data = request.get_json()
-    address = data.get('address')
-    if address:
-        video_src_2 = address
-        return jsonify(success=True)
-    return jsonify(success=False)
-
-# en esta funcion se realiza la fusion de imagenes
-def frames_video():
-    
-    video_local = cv.VideoCapture(video_src)
-    
-    if not video_local.isOpened():
-        print("No se pudo abrir el video local")
-        return
-
-
-    while True:
-        
-        succes, frame = video_local.read()
-       
-        if not succes:
-            break
-        else:
-            
-            #cv.putText(frame, str(cv.CAP_PROP_FPS), (40,40), cv.FONT_HERSHEY_SIMPLEX ,1,(255, 0, 0) , 2 ,cv.LINE_AA)          
-            _, buffer = cv.imencode('.jpg', frame)
-            
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            
-            
-    video_local.release()
-    
-
-@app.route('/video_feed')
-def video_feed():
-    return Response(frames_video(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
-
-# ya no se usa, la fusion se la hace directamente en el metodo aplicar_filtros 
-# solo se puede acceder a la camara una solicitud a la vez, buscar otra forma o app 
-def frames_video_externo():
-    global video_src_2
-    print(video_src_2)
-    video_ext = cv.VideoCapture("http://"+video_src_2+"/video")
-    
-   
-    if not video_ext.isOpened():
-        print("No se pudo abrir el video externo")
-        return
-    
-    while True:
-        
-        succes2, frame2 = video_ext.read()
-        
-        if not succes2:
-            break
-        else:
-            if video_ext is not None:
-                # aplico efecto poner bordes
-                frame2 = removeBackgroud(frame2)
-                _, buffer2 = cv.imencode('.jpg', frame2)
-                frame2 = buffer2.tobytes()
-                yield (b'--frame\r\n'
-                    b'Content-Type: image/jpeg\r\n\r\n' + frame2 + b'\r\n')
-                
-
-@app.route('/video_feed_externo')
-def video_feed_externo():
-    return Response(frames_video_externo(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 # funcion aplicar filtro
@@ -169,10 +87,6 @@ def aplicar_filtro():
     
     return jsonify({'status': 'Filtro aplicado'})
 
-# funcion para detener el video # aun no se a usado
-@app.route('/stop_video')
-def stop_video():
-    return redirect(url_for('index'))
 
 @app.route('/')
 def index():

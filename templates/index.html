@@ -3,53 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servidor Flask</title>
+    <title>Clasificación de Imágenes</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"">
 </head>
 <body>
-    <br/>
-    <h1 class="titulo">Servidor de fusión de imagenes</h1>
-    <div class="container mt-5">
-        <div class="card-container">
-            <div class="card card-1">
-                <div class="card-body">
-                    <h3>{{ mensaje }}</h3>
-                    {% if image_src %}
-                    <button id="reload-button" class="btn btn-success">recibir imagen</button>
-                    <div class="image-container card">
-                        <div class="card-body">
-                            <img src="{{ url_for('static', filename='Images/imagen_recibida.png') }}" class="img-fluid" alt="Imagen recibida">
+    <header class="bg-dark text-white text-center py-3">
+        <h1>Clasificación de Imágenes</h1>
+    </header>
+    <main class="container-fluid my-4">
+        <div class="card custom-card mb-4">
+            <div class="card-header text-center">
+                <h2>Detección de rasgos faciales</h2>
+            </div>
+            <div class="card-body row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 custom-card">
+                        <div class="card-body text-center">
+                            <h3>{{ mensaje }}</h3>
+                            {% if image_src %}
+                            <img src="{{ url_for('static', filename='Images/imagen_recibida.png') }}" alt="Imagen cargada" class="img-fluid mb-3" style="width: 360px; height: 480px;">
+                          
+                            {% endif %}
+                            <br>
+                            <button class="btn btn-dark" id="reload-button">Recibir imagen</button>
                         </div>
                     </div>
-                    {% endif %}
-                    <br>
-                    <button id="reload-button" class="btn btn-success">recibir imagen</button>
                 </div>
-            </div>
-            
-            <div class="card card-2">
-                <div class="card-body">
-                    <h2>Fuente de video</h2>
-                    <input type="text" id="fuenteVideo" class="form-control mb-2" placeholder="172.16.220.63:4747">
-                    <button onclick="" id="get-url" class="btn btn-success mb-2" data-url="{{ url_for('video_feed_externo') }}" >Obtener video</button> -->
-                   
-                    <img id="video-externo" class="img-fluid", alt="'video externo" />
-                </div>
-            </div>
-            
-            <div class="card card-3">
-                <div class="card-body">
-                    <button onclick="aplicarFiltro()" id="boton-filtro" class="btn btn-success">Aplicar Fusion</button>
-                    <h2>Fuente de video</h2>
-                    <img src="{{ url_for('video_feed') }}" class="img-fluid" alt="Video en vivo" id="video" width="800" height="600">
-                    <button onclick="detenerVideo()" class="btn btn-danger">Detener Video</button>
+                <div class="col-md-8 mb-4">
+                    <div class="card h-100 custom-card">
+                        <div class="card-body text-center">
+                            <h3>Filtros</h3>
+                            <div class="d-flex justify-content-around mb-3">
+                                <img src="" alt="Filtro 1" class="img-fluid" style="width: 360px; height: 480px;">
+                                <img src="" alt="Filtro 2" class="img-fluid" style="width: 360px; height: 480px;">
+                            </div>
+                            <button class="btn btn-dark">Aplicar filtros</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-
+        <div class="card custom-card">
+            <div class="card-header text-center">
+                <h2>Detección de rasgos faciales</h2>
+            </div>
+            <div class="card-body row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 custom-card">
+                        <div class="card-body text-center">
+                            <h3>{{ mensaje }}</h3>
+                            {% if image_src %}
+                          
+                            <img src="{{ url_for('static', filename='Images/imagen_recibida.png') }}" alt="Imagen cargada" class="img-fluid mb-3" style="width: 360px; height: 480px;">
+                            {% endif %}
+                            <br>
+                            <button class="btn btn-dark" id="reload-button">Recibir imagen</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 mb-4">
+                    <div class="card h-100 custom-card">
+                        <div class="card-body text-center">
+                            <h3>Filtros</h3>
+                            <div class="d-flex justify-content-around mb-3">
+                                <img src="" alt="Filtro 1" class="img-fluid" style="width: 360px; height: 480px;">
+                                <img src="" alt="Filtro 2" class="img-fluid" style="width: 360px; height: 480px;">
+                            </div>
+                            <button class="btn btn-dark">Aplicar filtros</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
