@@ -21,8 +21,8 @@
                     <div class="card h-100 custom-card">
                         <div class="card-body text-center">
                             <h3>{{ mensaje }}</h3>
-                            {% if image_src %}
-                            <img src="{{ url_for('static', filename='Images/imagen_recibida.png') }}" alt="Imagen cargada" class="img-fluid mb-3" style="width: 360px; height: 480px;">
+                            {% if image_src_1 %}
+                            <img src="{{ url_for('static', filename='Images/imagen_recibida_1_original.png') }}" alt="Imagen cargada" class="img-fluid mb-3" style="width: 360px; height: 480px;">
                           
                             {% endif %}
                             <br>
@@ -35,10 +35,19 @@
                         <div class="card-body text-center">
                             <h3>Filtros</h3>
                             <div class="d-flex justify-content-around mb-3">
-                                <img src="" alt="Filtro 1" class="img-fluid" style="width: 360px; height: 480px;">
-                                <img src="" alt="Filtro 2" class="img-fluid" style="width: 360px; height: 480px;">
+
+                                {% if image_src_2 %}
+                                <img src="{{ url_for('static', filename='Images/imagen_recibida_1_detecciones.png') }}" alt="original" class="img-fluid" style="width: 360px; height: 480px;">
+                                {% endif %}
+
+                                {% if image_output %}
+                                <img src="{{ url_for('static', filename='Images/output.png') }}" alt="filtro" class="img-fluid" style="width: 360px; height: 480px;">
+                                {% endif %}
+
+                               
+                               
                             </div>
-                            <button class="btn btn-dark">Aplicar filtros</button>
+                            <button class="btn btn-dark" onclick="aplicarFiltro()">Aplicar filtros</button>
                         </div>
                     </div>
                 </div>
@@ -53,10 +62,12 @@
                     <div class="card h-100 custom-card">
                         <div class="card-body text-center">
                             <h3>{{ mensaje }}</h3>
-                            {% if image_src %}
+                            {% if image_src_3 %}
                           
-                            <img src="{{ url_for('static', filename='Images/imagen_recibida.png') }}" alt="Imagen cargada" class="img-fluid mb-3" style="width: 360px; height: 480px;">
+                            <img src="{{ url_for('static', filename='Images/imagen_recibida_2_original.png') }}" alt="Imagen cargada" class="img-fluid mb-3" style="width: 360px; height: 480px;">
                             {% endif %}
+
+                            
                             <br>
                             <button class="btn btn-dark" id="reload-button">Recibir imagen</button>
                         </div>
@@ -67,8 +78,15 @@
                         <div class="card-body text-center">
                             <h3>Filtros</h3>
                             <div class="d-flex justify-content-around mb-3">
-                                <img src="" alt="Filtro 1" class="img-fluid" style="width: 360px; height: 480px;">
-                                <img src="" alt="Filtro 2" class="img-fluid" style="width: 360px; height: 480px;">
+                                {% if image_src_4 %}
+                
+                                <img src="{{ url_for('static', filename='Images/imagen_recibida_2_prediccion.png') }}"
+                                    alt="Imagen cargada" class="img-fluid mb-3" style="width: 360px; height: 480px;">
+                                {% endif %}
+
+                                {% if prediccion %}
+                                <h3> Predicción: {{ prediccion }}</h3>
+                                {% endif %}
                             </div>
                             <button class="btn btn-dark">Aplicar filtros</button>
                         </div>

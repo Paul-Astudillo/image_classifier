@@ -10,17 +10,8 @@ import numpy as np
 app = Flask(__name__)
 
 flag_imagen_recibida = True
-
-# origenes para fusionar la imagen
-# el video tiene una resolcion de 1920x1080
-# la imagen se copia en el punto (1600, 500) 
-x_img_o = 1600
-y_img_o = 500
-# el video de la fuente 2 se copia en (100, 400) 
-x_vid_o = 100
-y_vid_o = 400
-
-
+flag_imagen_filtro = False
+flag_prediccion = False
 
 # funcion aplicar filtro
 
@@ -30,13 +21,13 @@ def aplicar_filtro():
     data = request.json
     print(data)
     
-    imagen_android = cv.imread('static/Images/imagen_recibida.png')
+    imagen_android = cv.imread('static/Images/imagen_recibida_1_original.png')
 
     ancho_img = imagen_android.shape[1]
     alto_img = imagen_android.shape[0]
     
  
-    
+    flag_imagen_filtro = True
     
     return jsonify({'status': 'Filtro aplicado'})
 
@@ -45,23 +36,46 @@ def aplicar_filtro():
 def index():
     global flag_imagen_recibida
     if flag_imagen_recibida:
-        image_src = "static/Images/imagen_recibida.png"
-        mensaje = "Imagen recibida correctamente"
+        image_src_1 = "static/Images/imagen_recibida_1_original.png"
+        image_src_2 = "static/Images/imagen_recibida_1_deteccion.png"
+        image_src_3 = "static/Images/imagen_recibida_2_original.png"
+        image_src_4 = "static/Images/imagen_recibida_2_prediccion.png"
+        mensaje= "Imagen recibida correctamente"
+        
+        
     else:
-        image_src = None
+        image_src_1 = None
         mensaje = "Esperando imagen..."
 
-    return render_template('index.html', mensaje=mensaje, image_src=image_src)
+    if flag_imagen_filtro:
+        image_output = "static/Images/output.png"
+    else: 
+        image_output = None
+
+
+    if flag_prediccion:
+
+        texto_prediccion = "static/Images/datos_2.txt"
+
+        with open(texto_prediccion, 'r', encoding='utf-8') as file:
+            prediccion = file.read()
+    else: 
+        prediccion = ""
+
+
+    return render_template('index.html', mensaje=mensaje,image_src_1=image_src_1,
+                           image_src_2=image_src_2,image_src_3=image_src_3,
+                           image_src_4=image_src_4,image_output=image_output,prediccion=prediccion)
 
 # Funcion para recibir la imagen, se llama desde la app android
-@app.route('/recepcion', methods=['GET','POST'])
+@app.route('/recepcion1original', methods=['GET','POST'])
 def recepcion():
     global flag_imagen_recibida
 
     if request.content_type == 'image/png':
         image = request.get_data()
         
-        image_path = 'static/Images/imagen_recibida.png'
+        image_path = 'static/Images/imagen_recibida_1_original.png'
         with Image.open(BytesIO(image)) as img:
             img.save(image_path)
         flag_imagen_recibida = True
@@ -70,11 +84,28 @@ def recepcion():
     return  jsonify({'mensaje': 'imagen recibida'})
 
 
-@app.route('/recepciontxt', methods=['GET','POST'])
-def recepcion_txt():
+# Funcion para recibir la imagen, se llama desde la app android
+@app.route('/recepcion1deteccion', methods=['GET','POST'])
+def recepcion_deteccion():
+    global flag_imagen_recibida
+
+    if request.content_type == 'image/png':
+        image = request.get_data()
+        
+        image_path = 'static/Images/imagen_recibida_1_deteccion.png'
+        with Image.open(BytesIO(image)) as img:
+            img.save(image_path)
+        flag_imagen_recibida = True
+        print("imagen recibida")
+    # solo para retornar algo
+    return  jsonify({'mensaje': 'imagen recibida'})
+
+
+@app.route('/recepcion1datos', methods=['GET','POST'])
+def recepcion_datos_txt():
     global flag_imagen_recibida
     # Guarda el archivo .txt
-    text_path = 'static/Images/datos.txt'
+    text_path = 'static/Images/datos_1.txt'
     # Guarda el contenido en un archivo
     text_data = request.get_data(as_text=True)
     with open(text_path, 'w') as text_file:
@@ -85,16 +116,15 @@ def recepcion_txt():
     return jsonify({'mensaje': 'archivo .txt recibido'})
     
     
-
 # Funcion para recibir la imagen, se llama desde la app android
-@app.route('/recepcionpred', methods=['GET','POST'])
-def recepcion_pred():
+@app.route('/recepcion2original', methods=['GET','POST'])
+def recepcion_pred_original():
     global flag_imagen_recibida
 
     if request.content_type == 'image/png':
         image = request.get_data()
         
-        image_path = 'static/Images/prediccion_recibida.png'
+        image_path = 'static/Images/imagen_recibida_2_original.png'
         with Image.open(BytesIO(image)) as img:
             img.save(image_path)
         flag_imagen_recibida = True
@@ -102,6 +132,38 @@ def recepcion_pred():
     # solo para retornar algo
     return  jsonify({'mensaje': 'imagen recibida'})
 
+
+
+# Funcion para recibir la imagen, se llama desde la app android
+@app.route('/recepcion2prediccion', methods=['GET','POST'])
+def recepcion_pred():
+    global flag_imagen_recibida
+
+    if request.content_type == 'image/png':
+        image = request.get_data()
+        
+        image_path = 'static/Images/imagen_recibida_2_prediccion.png'
+        with Image.open(BytesIO(image)) as img:
+            img.save(image_path)
+        flag_imagen_recibida = True
+        print("imagen prediccion recibida")
+    # solo para retornar algo
+    return  jsonify({'mensaje': 'imagen recibida'})
+
+
+@app.route('/recepcion2datos', methods=['GET','POST'])
+def recepcion_datos_prediccion_txt():
+    global flag_imagen_recibida
+    # Guarda el archivo .txt
+    text_path = 'static/Images/datos_2.txt'
+    # Guarda el contenido en un archivo
+    text_data = request.get_data(as_text=True)
+    with open(text_path, 'w') as text_file:
+        text_file.write(text_data)
+        
+    print("Archivo .txt recibido")
+
+    return jsonify({'mensaje': 'archivo .txt recibido'})
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
