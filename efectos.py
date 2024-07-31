@@ -11,13 +11,24 @@ def filtro_payaso():
     rostro = cv2.imread(rostro_path)
 
    
-    clown_nose_path = './static/assets/clown-nose.png'  # Ruta de la imagen de la nariz de payaso
+    clown_nose_path = './static/assets/clown-nose.png' 
     nariz_payaso = cv2.imread(clown_nose_path , cv2.IMREAD_UNCHANGED)
+    clown_eyes_path_left = './static/assets/clown-eyes-left.png'  
+    ojos_payaso_left = cv2.imread(clown_eyes_path_left , cv2.IMREAD_UNCHANGED)
+    clown_eyes_path_right = './static/assets/clown-eyes-right.png'  
+    ojos_payaso_right = cv2.imread(clown_eyes_path_right , cv2.IMREAD_UNCHANGED)
 
-    # Dimensiones y coordenadas de la nariz
+    clown_hair_top_path = './static/assets/clown-hair-top.png'  
+    clown_hair_top = cv2.imread(clown_hair_top_path , cv2.IMREAD_UNCHANGED)
+
+    # Dimensiones y coordenadas de las partes del rostro
     detecciones = get_puntos_rostro()
     # 0 Face, 1 Eyes, 2 nose, 3 mouth
     nariz_coords = detecciones[2][0][1]
+    eyes_coords_left = detecciones[1][0][1]
+    eyes_coords_right = detecciones[1][1][1]
+    face_coords = detecciones[0][0][1]
+
     
     x, y, w, h = nariz_coords
 
@@ -45,8 +56,95 @@ def filtro_payaso():
     dst = cv2.add(roi_bg, nariz_fg)
     rostro[y:y+h, x:x+w] = dst
 
+    # se repite el proceso para el resto de las partes
+    # Ojos
+    # Ojo Izquierdo
+    x, y, w, h = eyes_coords_left
+     # Crear una ROI en la imagen del rostro
+    roi = rostro[y:y+h, x:x+w]
+     # Redimensionar la imagen de la nariz de payaso
+    ojos_payaso_resized = cv2.resize(ojos_payaso_left, (w, h))
+    # Convertir la imagen de la nariz de payaso a 3 canales si es necesario
+    if ojos_payaso_resized.shape[2] == 4:
+        ojos_payaso_resized = cv2.cvtColor(ojos_payaso_resized, cv2.COLOR_BGRA2BGR)
+    # Crear una máscara y su inversa a partir del canal alfa de la imagen de la nariz de payaso
+    ojos_payaso_gray = cv2.cvtColor(ojos_payaso_resized, cv2.COLOR_BGR2GRAY)
+    _, mask = cv2.threshold(ojos_payaso_gray, 1, 255, cv2.THRESH_BINARY)
+    mask_inv = cv2.bitwise_not(mask)
+    # Hacer la región del rostro donde se colocará la nariz negra
+    roi_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+
+    # Extraer solo la región de la nariz de payaso
+    ojos_fg = cv2.bitwise_and(ojos_payaso_resized, ojos_payaso_resized, mask=mask)
+
+    
+    dst = cv2.add(roi_bg, ojos_fg)
+    rostro[y:y+h, x:x+w] = dst
+
+
+    # Ojo derecho
+
+    x, y, w, h = eyes_coords_right
+     # Crear una ROI en la imagen del rostro
+    roi = rostro[y:y+h, x:x+w]
+     # Redimensionar la imagen de la nariz de payaso
+    ojos_payaso_resized_right = cv2.resize(ojos_payaso_right, (w, h))
+    # Convertir la imagen de la nariz de payaso a 3 canales si es necesario
+    if ojos_payaso_resized_right.shape[2] == 4:
+        ojos_payaso_resized_right = cv2.cvtColor(ojos_payaso_resized_right, cv2.COLOR_BGRA2BGR)
+    # Crear una máscara y su inversa a partir del canal alfa de la imagen de la nariz de payaso
+    ojos_payaso_gray = cv2.cvtColor(ojos_payaso_resized_right, cv2.COLOR_BGR2GRAY)
+    _, mask = cv2.threshold(ojos_payaso_gray, 1, 255, cv2.THRESH_BINARY)
+    mask_inv = cv2.bitwise_not(mask)
+    # Hacer la región del rostro donde se colocará la nariz negra
+    roi_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+
+    # Extraer solo la región de la nariz de payaso
+    ojos_fg_right = cv2.bitwise_and(ojos_payaso_resized_right, ojos_payaso_resized_right, mask=mask)
+
+    
+    dst = cv2.add(roi_bg, ojos_fg_right)
+    rostro[y:y+h, x:x+w] = dst
+
+     # Cara
+
+    x, y, w, h = face_coords
+    
+    h = h//2
+
+    y = int (y - (y*0.5))
+
+
+
+    roi = rostro[y:y+h, x:x+w]
+     # Redimensionar la imagen de la nariz de payaso
+    clown_hair_top_resized = cv2.resize(clown_hair_top, (w, h))
+    
+    if clown_hair_top_resized.shape[2] == 4:
+        clown_hair_top_resized = cv2.cvtColor(clown_hair_top_resized, cv2.COLOR_BGRA2BGR)
+    # Crear una máscara y su inversa a partir del canal alfa de la imagen de la nariz de payaso
+    clown_hair_top_gray = cv2.cvtColor(clown_hair_top_resized, cv2.COLOR_BGR2GRAY)
+    _, mask = cv2.threshold(clown_hair_top_gray, 1, 255, cv2.THRESH_BINARY)
+    mask_inv = cv2.bitwise_not(mask)
+    # Hacer la región del rostro donde se colocará la nariz negra
+    roi_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+
+    # Extraer solo la región de la nariz de payaso
+    clown_hair_fg = cv2.bitwise_and(clown_hair_top_resized, clown_hair_top_resized, mask=mask)
+
+    
+    dst = cv2.add(roi_bg, clown_hair_fg)
+    rostro[y:y+h, x:x+w] = dst
+
+
+
+
     # Mostrar la imagen resultante
-    cv2.imshow('Rostro con Nariz de Payaso', rostro)
+    cv2.imshow('Rostro Payaso', rostro)
+
+
+
+
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 

@@ -86,6 +86,21 @@ def recepcion_txt():
     
     
 
+# Funcion para recibir la imagen, se llama desde la app android
+@app.route('/recepcionpred', methods=['GET','POST'])
+def recepcion_pred():
+    global flag_imagen_recibida
+
+    if request.content_type == 'image/png':
+        image = request.get_data()
+        
+        image_path = 'static/Images/prediccion_recibida.png'
+        with Image.open(BytesIO(image)) as img:
+            img.save(image_path)
+        flag_imagen_recibida = True
+        print("imagen prediccion recibida")
+    # solo para retornar algo
+    return  jsonify({'mensaje': 'imagen recibida'})
 
 
 @app.route('/static/<path:filename>')
