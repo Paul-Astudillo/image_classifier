@@ -54,47 +54,40 @@ def non_max_suppression(detections, overlap_thresh=0.3):
     if len(detections) == 0:
         return []
 
-    # Convert detections to array
     boxes = np.array([det[1] for det in detections])
     labels = [det[0] for det in detections]
-    
-    # Initialize the list of picked indexes
+  
     pick = []
 
-    # Calculate the coordinates of the bounding boxes
     x1 = boxes[:,0]
     y1 = boxes[:,1]
     x2 = boxes[:,0] + boxes[:,2]
     y2 = boxes[:,1] + boxes[:,3]
 
-    # Compute the area of the bounding boxes and sort by the bottom-right y-coordinate
+   
     area = (x2 - x1 + 1) * (y2 - y1 + 1)
     idxs = np.argsort(y2)
 
     while len(idxs) > 0:
-        # Grab the last index in the indexes list and add the index value to the list of picked indexes
+       
         last = len(idxs) - 1
         i = idxs[last]
         pick.append(i)
 
-        # Find the largest (x, y) coordinates for the start of the bounding box
-        # and the smallest (x, y) coordinates for the end of the bounding box
         xx1 = np.maximum(x1[i], x1[idxs[:last]])
         yy1 = np.maximum(y1[i], y1[idxs[:last]])
         xx2 = np.minimum(x2[i], x2[idxs[:last]])
         yy2 = np.minimum(y2[i], y2[idxs[:last]])
 
-        # Compute the width and height of the bounding box
+       
         w = np.maximum(0, xx2 - xx1 + 1)
         h = np.maximum(0, yy2 - yy1 + 1)
 
-        # Compute the ratio of overlap
+       
         overlap = (w * h) / area[idxs[:last]]
 
-        # Delete all indexes from the index list that have overlap greater than the provided overlap threshold
         idxs = np.delete(idxs, np.concatenate(([last], np.where(overlap > overlap_thresh)[0])))
 
-    # Return only the picked detections
     return [(labels[i], boxes[i].tolist()) for i in pick]
 
 print("mejores puntos")
