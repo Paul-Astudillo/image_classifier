@@ -21,12 +21,14 @@ Con HOG desde la app android se emplea un modelo de clasificación de prendas de
 
 ### Endpoints:
 
-    ```/recepcion1original```
-    ```/recepcion1deteccion```
-    ```/recepcion1datos```
-    ```/recepcion2original```
-    ```/recepcion2prediccion```
-    ```/recepcion2datos```
+    ```
+    /recepcion1original
+    /recepcion1deteccion
+    /recepcion1datos
+    /recepcion2original
+    /recepcion2prediccion
+    /recepcion2datos
+    ```
 
 
 
