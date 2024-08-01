@@ -1,8 +1,8 @@
 import numpy as np
 
-# esta es la funcion que se usa en el main.py
+
 def get_puntos_rostro():
-    # obtiene los puntos del archivo datos.txt enviado desde android y los guarda en una lista
+    
     lista_detecciones = leer_puntos()
    
     # separa los tipos de detecciones 
@@ -12,13 +12,13 @@ def get_puntos_rostro():
     nose_detections = [det for det in lista_detecciones if det[0] == 'Nose']
     mouth_detections = [det for det in lista_detecciones if det[0] == 'Mouth']
 
-    # Apply non-maximum suppression to each type of detection
+    
     filtered_faces = non_max_suppression(face_detections)
     filtered_eyes = non_max_suppression(eye_detections)
     filtered_noses = non_max_suppression(nose_detections)
     filtered_mouths = non_max_suppression(mouth_detections)
 
-    # Save the results in variables
+    
     best_face = filtered_faces
     best_eyes = filtered_eyes
     best_nose = filtered_noses

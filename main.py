@@ -13,18 +13,12 @@ flag_imagen_recibida = True
 flag_imagen_filtro = True
 flag_prediccion = True
 
-# funcion aplicar filtro
 
 @app.route('/aplicar_filtro', methods=['POST'])
 def aplicar_filtro():
     
     data = request.json
     print(data)
-    
-    imagen_android = cv.imread('static/Images/imagen_recibida_1_original.png')
-
-    ancho_img = imagen_android.shape[1]
-    alto_img = imagen_android.shape[0]
     
     filtro_payaso()
  
@@ -73,7 +67,7 @@ def index():
 def recepcion():
     global flag_imagen_recibida
 
-    #if request.content_type == 'image/png':
+    
     image = request.get_data()
         
     image_path = 'static/Images/imagen_recibida_1_original.png'
@@ -92,7 +86,7 @@ def recepcion():
 def recepcion_deteccion():
     global flag_imagen_recibida
 
-    #if request.content_type == 'image/png':
+    
     image = request.get_data()
     print("LEE el PNG")
             
@@ -109,9 +103,9 @@ def recepcion_deteccion():
 @app.route('/recepcion1datos', methods=['GET','POST'])
 def recepcion_datos_txt():
     global flag_imagen_recibida
-    # Guarda el archivo .txt
+    
     text_path = 'static/Images/datos_1.txt'
-    # Guarda el contenido en un archivo
+   
     text_data = request.get_data(as_text=True)
     with open(text_path, 'w') as text_file:
         text_file.write(text_data)
