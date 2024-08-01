@@ -36,7 +36,7 @@ def get_puntos_rostro():
 
 
 def leer_puntos():
-    with open('./static/Images/datos.txt', 'r') as file:
+    with open('./static/Images/datos_1.txt', 'r') as file:
         detections = file.read()
 
     # obtener lista de detecciones

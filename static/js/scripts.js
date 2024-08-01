@@ -26,4 +26,6 @@ function aplicarFiltro() {
     .catch((error) => {
         console.error('Error:', error);
     });
+
+    this.location.reload(); 
 }

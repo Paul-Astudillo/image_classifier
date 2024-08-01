@@ -37,7 +37,7 @@
                             <div class="d-flex justify-content-around mb-3">
 
                                 {% if image_src_2 %}
-                                <img src="{{ url_for('static', filename='Images/imagen_recibida_1_detecciones.png') }}" alt="original" class="img-fluid" style="width: 360px; height: 480px;">
+                                <img src="{{ url_for('static', filename='Images/imagen_recibida_1_deteccion.png') }}" alt="original" class="img-fluid" style="width: 360px; height: 480px;">
                                 {% endif %}
 
                                 {% if image_output %}
@@ -69,26 +69,26 @@
 
                             
                             <br>
-                            <button class="btn btn-dark" id="reload-button">Recibir imagen</button>
+                            <button class="btn btn-dark" id="reload-button" onclick="aplicarFiltro()">Recibir imagen</button>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-8 mb-4">
                     <div class="card h-100 custom-card">
                         <div class="card-body text-center">
-                            <h3>Filtros</h3>
+                            <h3>predicciones</h3>
                             <div class="d-flex justify-content-around mb-3">
-                                {% if image_src_4 %}
+                                <!-- {% if image_src_4 %}
                 
                                 <img src="{{ url_for('static', filename='Images/imagen_recibida_2_prediccion.png') }}"
                                     alt="Imagen cargada" class="img-fluid mb-3" style="width: 360px; height: 480px;">
-                                {% endif %}
+                                {% endif %} -->
 
                                 {% if prediccion %}
-                                <h3> Predicción: {{ prediccion }}</h3>
+                                <h3>{{ prediccion }}</h3>
                                 {% endif %}
                             </div>
-                            <button class="btn btn-dark">Aplicar filtros</button>
+                            
                         </div>
                     </div>
                 </div>

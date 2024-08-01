@@ -4,14 +4,14 @@ from io import BytesIO
 import os
 import cv2 as cv
 import numpy as np
-# import desde efectos.py
-#from efectos import removeBackgroud, bordesColor
+
+from efectos import filtro_payaso
 
 app = Flask(__name__)
 
 flag_imagen_recibida = True
-flag_imagen_filtro = False
-flag_prediccion = False
+flag_imagen_filtro = True
+flag_prediccion = True
 
 # funcion aplicar filtro
 
@@ -26,6 +26,7 @@ def aplicar_filtro():
     ancho_img = imagen_android.shape[1]
     alto_img = imagen_android.shape[0]
     
+    filtro_payaso()
  
     flag_imagen_filtro = True
     
@@ -68,18 +69,20 @@ def index():
                            image_src_4=image_src_4,image_output=image_output,prediccion=prediccion)
 
 # Funcion para recibir la imagen, se llama desde la app android
-@app.route('/recepcion1original', methods=['GET','POST'])
+@app.route('/recepcion1original', methods=['POST'])
 def recepcion():
     global flag_imagen_recibida
 
-    if request.content_type == 'image/png':
-        image = request.get_data()
+    #if request.content_type == 'image/png':
+    image = request.get_data()
         
-        image_path = 'static/Images/imagen_recibida_1_original.png'
-        with Image.open(BytesIO(image)) as img:
-            img.save(image_path)
-        flag_imagen_recibida = True
-        print("imagen recibida")
+    image_path = 'static/Images/imagen_recibida_1_original.png'
+        
+       
+    with Image.open(BytesIO(image)) as img:
+        img.save(image_path)
+    flag_imagen_recibida = True
+    print("imagen recibida")
     # solo para retornar algo
     return  jsonify({'mensaje': 'imagen recibida'})
 
@@ -89,14 +92,16 @@ def recepcion():
 def recepcion_deteccion():
     global flag_imagen_recibida
 
-    if request.content_type == 'image/png':
-        image = request.get_data()
+    #if request.content_type == 'image/png':
+    image = request.get_data()
+    print("LEE el PNG")
+            
+    image_path = 'static/Images/imagen_recibida_1_deteccion.png'
         
-        image_path = 'static/Images/imagen_recibida_1_deteccion.png'
-        with Image.open(BytesIO(image)) as img:
-            img.save(image_path)
-        flag_imagen_recibida = True
-        print("imagen recibida")
+    with Image.open(BytesIO(image)) as img:
+        img.save(image_path)
+    flag_imagen_recibida = True
+    print("imagen recibida")
     # solo para retornar algo
     return  jsonify({'mensaje': 'imagen recibida'})
 
@@ -121,14 +126,14 @@ def recepcion_datos_txt():
 def recepcion_pred_original():
     global flag_imagen_recibida
 
-    if request.content_type == 'image/png':
-        image = request.get_data()
+    #if request.content_type == 'image/png':
+    image = request.get_data()
         
-        image_path = 'static/Images/imagen_recibida_2_original.png'
-        with Image.open(BytesIO(image)) as img:
-            img.save(image_path)
-        flag_imagen_recibida = True
-        print("imagen prediccion recibida")
+    image_path = 'static/Images/imagen_recibida_2_original.png'
+    with Image.open(BytesIO(image)) as img:
+        img.save(image_path)
+    flag_imagen_recibida = True
+    print("imagen prediccion recibida")
     # solo para retornar algo
     return  jsonify({'mensaje': 'imagen recibida'})
 
@@ -139,14 +144,14 @@ def recepcion_pred_original():
 def recepcion_pred():
     global flag_imagen_recibida
 
-    if request.content_type == 'image/png':
-        image = request.get_data()
+    #if request.content_type == 'image/png':
+    image = request.get_data()
         
-        image_path = 'static/Images/imagen_recibida_2_prediccion.png'
-        with Image.open(BytesIO(image)) as img:
-            img.save(image_path)
-        flag_imagen_recibida = True
-        print("imagen prediccion recibida")
+    image_path = 'static/Images/imagen_recibida_2_prediccion.png'
+    with Image.open(BytesIO(image)) as img:
+        img.save(image_path)
+    flag_imagen_recibida = True
+    print("imagen prediccion recibida")
     # solo para retornar algo
     return  jsonify({'mensaje': 'imagen recibida'})
 
